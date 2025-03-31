@@ -1,0 +1,54 @@
+# OS関連
+.DS_Store
+Thumbs.db
+
+# IDE関連
+.idea/
+.vscode/
+*.iml
+
+# Node.js関連
+node_modules/
+npm-debug.log
+yarn-error.log
+.next/
+out/
+dist/
+
+# 環境変数
+.env
+.env.local
+.env.development
+.env.production
+
+# Next.js build files
+.next/
+.vercel/
+out/
+
+# Spring Boot関連
+target/
+*.jar
+*.war
+*.ear
+
+# Gradle関連
+.gradle/
+build/
+!gradle-wrapper.jar
+.gradle/
+build/
+
+# Maven関連
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+dependency-reduced-pom.xml
+release.properties
+
+# Logs & Temp Files
+logs/
+*.log
+hs_err_pid*
+*.swp
