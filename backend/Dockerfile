@@ -1,17 +1,17 @@
-# ベースイメージ（JDK入りの軽量イメージ）
 FROM openjdk:17-jdk-slim
 
-# 環境変数（必要なら設定）
-ENV JAVA_OPTS=""
-
-# 作業ディレクトリの作成と移動
+# 作業ディレクトリ作成
 WORKDIR /app
 
-# JARファイルをコンテナにコピー
-COPY build/libs/*.jar app.jar
+# ホストからのファイルをコピー（build.gradle等のビルド用に）
+COPY build.gradle settings.gradle gradlew /app/
+COPY gradle /app/gradle
 
-# ポート8080を開放
-EXPOSE 8080
+# 依存だけ先にダウンロードしてキャッシュ効かせる
+RUN ./gradlew build --no-daemon || return 0
 
-# アプリの起動コマンド
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+# ソースコードを追加
+COPY . /app
+
+# DevTools を有効にして Spring Boot 起動
+CMD ["./gradlew", "bootRun", "--no-daemon"]
