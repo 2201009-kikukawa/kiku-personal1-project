@@ -20,6 +20,10 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
+      - name: Grant execute permission to Gradle wrapper
+        run: chmod +x gradlew
+        working-directory: backend
+
       - name: Build and test with Gradle
         run: ./gradlew build
         working-directory: backend
