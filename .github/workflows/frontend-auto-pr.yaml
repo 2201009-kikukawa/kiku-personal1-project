@@ -1,0 +1,49 @@
+name: Auto PR to main
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  ci-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: frontend # ← ここを backend に変えればOK
+
+      - name: Run Lint
+        run: npm run lint
+        working-directory: frontend
+
+      - name: Run Tests
+        run: npm run test
+        working-directory: frontend
+
+  create-pr:
+    needs: ci-check
+    runs-on: ubuntu-latest
+    if: ${{ success() }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create PR from test to main
+        uses: devops-infra/action-pull-request@v0.5.4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_branch: test
+          target_branch: main
+          title: "Auto PR: test → main"
+          body: "✅ CI passed on `test` branch. Please review and merge into `main` manually."
