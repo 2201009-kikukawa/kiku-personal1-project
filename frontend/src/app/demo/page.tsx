@@ -15,7 +15,7 @@ export default function DemoPage() {
 
   return (
     <div>
-      <h1>デモページ</h1>
+      <h1>デモページver2</h1>
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
