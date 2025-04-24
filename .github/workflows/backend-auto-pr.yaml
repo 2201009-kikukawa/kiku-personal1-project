@@ -1,0 +1,44 @@
+name: Backend Auto PR to main
+
+on:
+  push:
+    branches:
+      - test
+  paths:
+    - "backend/**"
+
+jobs:
+  backend-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Build and test with Gradle
+        run: ./gradlew build
+        working-directory: backend
+
+  create-pr:
+    needs: backend-ci
+    runs-on: ubuntu-latest
+    if: ${{ success() }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create PR from test to main
+        uses: devops-infra/action-pull-request@v0.5.4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_branch: test
+          target_branch: main
+          title: "Auto PR: test → main (Backend)"
+          body: "✅ Backend CI passed on `test` branch. Please review and manually merge into `main`."
